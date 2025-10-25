@@ -1,4 +1,8 @@
 using Amazon.DynamoDBv2;
+using Tennis.Core.Repositories;
+using Tennis.Domain.Services.Impl;
+using Tennis.Domain.Services.Interfaces;
+using Tennis.Infra.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +17,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
 
 
 var app = builder.Build();
