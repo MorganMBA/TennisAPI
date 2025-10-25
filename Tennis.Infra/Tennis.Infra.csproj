@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="4.0.9.1" />
+    <ProjectReference Include="..\Tennis.Core\Tennis.Core.csproj" />
   </ItemGroup>
 
 </Project>
