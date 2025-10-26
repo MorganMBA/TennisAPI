@@ -27,12 +27,12 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run:
+      run: |
         dotnet restore ${{ env.PROJECT_PATH }}/Tennis.API.csproj
         dotnet restore Tennis.Tests/Tennis.Tests.csproj
 
     - name: Build solution
-      run:
+      run: |
         dotnet build ${{ env.PROJECT_PATH }}/Tennis.API.csproj --configuration Release --no-restore
         dotnet build Tennis.Tests/Tennis.Tests.csproj --configuration Release --no-restore
 
