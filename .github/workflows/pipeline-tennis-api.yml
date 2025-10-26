@@ -27,10 +27,14 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore ${{ env.PROJECT_PATH }}/Tennis.API.csproj
+      run:
+        dotnet restore ${{ env.PROJECT_PATH }}/Tennis.API.csproj
+        dotnet restore Tennis.Tests/Tennis.Tests.csproj
 
     - name: Build solution
-      run: dotnet build ${{ env.PROJECT_PATH }}/Tennis.API.csproj --configuration Release --no-restore
+      run:
+        dotnet build ${{ env.PROJECT_PATH }}/Tennis.API.csproj --configuration Release --no-restore
+        dotnet build Tennis.Tests/Tennis.Tests.csproj --configuration Release --no-restore
 
     - name: Run unit tests (NUnit)
       run: dotnet test Tennis.Tests/Tennis.Tests.csproj --no-restore --configuration Release --logger "trx;LogFileName=test-results.trx"
