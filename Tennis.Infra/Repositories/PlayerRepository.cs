@@ -20,14 +20,14 @@ namespace Tennis.Infra.Repositories
             await _dynamoDbContext.SaveAsync(player);
         }
 
-        public Task<IEnumerable<Player>> GetAllAsync()
+        public async Task<IEnumerable<Player>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dynamoDbContext.ScanAsync<Player>(new List<ScanCondition>{}).GetRemainingAsync();
         }
 
-        public Task<Player?> GetByIdAsync(int id)
+        public async Task<Player?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dynamoDbContext.LoadAsync<Player>(id);
         }
     }
 }
