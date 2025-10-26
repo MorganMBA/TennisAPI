@@ -14,10 +14,25 @@ namespace Tennis.API.Controllers
             _playerService = playerService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetPlayers()
+        {
+            var players = await _playerService.GetAllAsync();
+
+            if (players == null || !players.Any())
+                return NoContent();
+
+            return Ok(players);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPlayerById(int id)
         {
-            return Ok();
+            var player = await _playerService.GetByIdAsync(id);
+
+            if (player == null) return NotFound(new { message = $"Le joueur avec l'id {id} est introuvable." });
+
+            return Ok(player);
         }
 
         [HttpPost]

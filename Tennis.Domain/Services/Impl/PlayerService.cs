@@ -18,14 +18,20 @@ namespace Tennis.Domain.Services.Impl
             await _playerRepository.AddAsync(player);
         }
 
-        public Task<IEnumerable<PlayerDto>> GetAllAsync()
+        public async Task<IEnumerable<PlayerDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var players = await _playerRepository.GetAllAsync();
+            return players.Select(PlayerMapper.ToDto);
         }
 
-        public Task<PlayerDto?> GetByIdAsync(int id)
+        public async Task<PlayerDto?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var player = await _playerRepository.GetByIdAsync(id);
+
+            if (player == null)
+                return null;
+
+            return PlayerMapper.ToDto(player);
         }
     }
 }
