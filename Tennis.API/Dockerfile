@@ -15,6 +15,7 @@ COPY ["Tennis.Core/Tennis.Core.csproj", "Tennis.Core/"]
 COPY ["Tennis.Infra/Tennis.Infra.csproj", "Tennis.Infra/"]
 COPY ["Tennis.Tests/Tennis.Tests.csproj", "Tennis.Tests/"]
 RUN dotnet restore "./Tennis.API/Tennis.API.csproj"
+RUN dotnet restore "Tennis.Tests/Tennis.Tests.csproj"
 COPY . .
 WORKDIR "/src/Tennis.Tests"
 RUN dotnet test --no-restore -c $BUILD_CONFIGURATION
