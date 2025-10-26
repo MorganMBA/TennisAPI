@@ -10,7 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAWSService<IAmazonDynamoDB>(new Amazon.Extensions.NETCore.Setup.AWSOptions()
 {
-    Region = Amazon.RegionEndpoint.EUCentral1
+    Region = Amazon.RegionEndpoint.EUCentral1,
+    Credentials = new Amazon.Runtime.BasicAWSCredentials("fakeAccessKeyId", "fakeSecretAccessKey"),
+    DefaultClientConfig = { ServiceURL = "http://localhost:8000", AuthenticationRegion = "eu-central-1" }
 });
 
 builder.Services.AddControllers();
