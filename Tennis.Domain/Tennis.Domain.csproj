@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Tennis.Core\Tennis.Core.csproj" />
+  </ItemGroup>
+
 </Project>
