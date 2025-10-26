@@ -8,7 +8,7 @@ on:
 env:
   AWS_REGION: eu-central-1
   ECR_REPOSITORY: tennis-api
-  EC2_HOST: ${{ secrets.EC2_HOST }}
+  EC2_STAGING_HOST: ${{ secrets.EC2_STAGING_HOST }}
   EC2_USER: ec2-user
   IMAGE_TAG: latest
   PROJECT_PATH: Tennis.API
@@ -64,7 +64,7 @@ jobs:
     - name: Deploy to EC2 instance
       uses: appleboy/ssh-action@v1.2.0
       with:
-        host: ${{ env.EC2_HOST }}
+        host: ${{ env.EC2_STAGING_HOST }}
         username: ${{ env.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
