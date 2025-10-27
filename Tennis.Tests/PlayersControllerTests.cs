@@ -1,0 +1,72 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Tennis.API.Controllers;
+using Tennis.Core.Dtos;
+using Tennis.Domain.Services.Interfaces;
+
+namespace Tennis.Tests
+{
+    [TestFixture]
+    public class PlayersControllerTests
+    {
+        private Mock<IPlayerService> _mockPlayerService;
+        private Mock<IPlayerStatsService> _mockPlayerStatsService;
+        private Mock<ILogger<PlayersController>> _mockLogger;
+        private PlayersController _controller;
+
+        [SetUp]
+        public void Setup()
+        {
+            _mockPlayerService = new Mock<IPlayerService>();
+            _mockPlayerStatsService = new Mock<IPlayerStatsService>();
+            _mockLogger = new Mock<ILogger<PlayersController>>();
+            _controller = new PlayersController(_mockPlayerService.Object, _mockPlayerStatsService.Object, _mockLogger.Object);
+        }
+
+        [Test]
+        public async Task GetPlayers_ShouldReturnOk_WhenPlayersExist()
+        {
+            var players = new List<PlayerDto>
+            {
+                new PlayerDto { Id = 1, Firstname = "Roger", Lastname = "Federer" }
+            }.AsEnumerable();
+            _mockPlayerService.Setup(s => s.GetAllAsync()).ReturnsAsync(players);
+
+            var response = await _controller.GetPlayers();
+
+            Assert.That(response, Is.InstanceOf<OkObjectResult>());
+            var ok = response as OkObjectResult;
+            Assert.That(ok!.Value, Is.EqualTo(players));
+        }
+
+        [Test]
+        public async Task GetPlayerById_ShouldReturnNotFound_WhenNoPlayer()
+        {
+            _mockPlayerService.Setup(s => s.GetByIdAsync(42)).ReturnsAsync((PlayerDto?)null);
+
+            var response = await _controller.GetPlayerById(42);
+
+            Assert.That(response, Is.InstanceOf<OkObjectResult>());
+        }
+
+        [Test]
+        public async Task GetPlayerById_ShouldReturnOk_WhenPlayerExists()
+        {
+            var player = new PlayerDto { Id = 7, Firstname = "Djokovic", Lastname = "Novak" };
+            _mockPlayerService.Setup(s => s.GetByIdAsync(7)).ReturnsAsync(player);
+
+            var response = await _controller.GetPlayerById(7);
+
+            var ok = response as OkObjectResult;
+            Assert.That(ok, Is.Not.Null);
+            Assert.That(ok!.Value, Is.EqualTo(player));
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _controller?.Dispose();
+        }
+    }
+}
