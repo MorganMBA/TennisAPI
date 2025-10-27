@@ -7,6 +7,9 @@ namespace Tennis.Domain.Mapper
     {
         public static PlayerDto ToDto(Player entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             return new PlayerDto
             {
                 Id = entity.Id,
@@ -14,20 +17,30 @@ namespace Tennis.Domain.Mapper
                 Lastname = entity.Lastname,
                 Shortname = entity.Shortname,
                 Sex = entity.Sex,
-                CountryCode = entity.Country.Code,
-                CountryPicture = entity.Country.Picture,
                 Picture = entity.Picture,
-                Rank = entity.Data.Rank,
-                Points = entity.Data.Points,
-                Weight = entity.Data.Weight,
-                Height = entity.Data.Height,
-                Age = entity.Data.Age,
-                Last = entity.Data.Last
+                Country = new CountryDto
+                {
+                    Code = entity.Country?.Code ?? string.Empty,
+                    Picture = entity.Country?.Picture ?? string.Empty
+                },
+                Data = new PlayerDataDto
+                {
+                    Rank = entity.Data?.Rank ?? 0,
+                    Points = entity.Data?.Points ?? 0,
+                    Weight = entity.Data?.Weight ?? 0,
+                    Height = entity.Data?.Height ?? 0,
+                    Age = entity.Data?.Age ?? 0,
+                    Last = entity.Data?.Last ?? new List<int>()
+                }
             };
         }
 
+
         public static Player ToEntity(PlayerDto dto)
         {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
             return new Player
             {
                 Id = dto.Id,
@@ -38,19 +51,20 @@ namespace Tennis.Domain.Mapper
                 Picture = dto.Picture,
                 Country = new Country
                 {
-                    Code = dto.CountryCode,
-                    Picture = dto.CountryPicture
+                    Code = dto.Country?.Code ?? string.Empty,
+                    Picture = dto.Country?.Picture ?? string.Empty
                 },
                 Data = new PlayerData
                 {
-                    Rank = dto.Rank,
-                    Points = dto.Points,
-                    Weight = dto.Weight,
-                    Height = dto.Height,
-                    Age = dto.Age,
-                    Last = dto.Last
+                    Rank = dto.Data?.Rank ?? 0,
+                    Points = dto.Data?.Points ?? 0,
+                    Weight = dto.Data?.Weight ?? 0,
+                    Height = dto.Data?.Height ?? 0,
+                    Age = dto.Data?.Age ?? 0,
+                    Last = dto.Data?.Last ?? new List<int>()
                 }
             };
         }
+
     }
 }
