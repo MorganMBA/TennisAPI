@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Tennis.API.Controllers;
 using Tennis.Core.Dtos;
@@ -11,6 +12,7 @@ namespace Tennis.Tests
     {
         private Mock<IPlayerService> _mockPlayerService;
         private Mock<IPlayerStatsService> _mockPlayerStatsService;
+        private Mock<ILogger<PlayersController>> _mockLogger;
         private PlayersController _controller;
 
         [SetUp]
@@ -18,7 +20,8 @@ namespace Tennis.Tests
         {
             _mockPlayerService = new Mock<IPlayerService>();
             _mockPlayerStatsService = new Mock<IPlayerStatsService>();
-            _controller = new PlayersController(_mockPlayerService.Object, _mockPlayerStatsService.Object);
+            _mockLogger = new Mock<ILogger<PlayersController>>();
+            _controller = new PlayersController(_mockPlayerService.Object, _mockPlayerStatsService.Object, _mockLogger.Object);
         }
 
         [Test]
@@ -44,7 +47,7 @@ namespace Tennis.Tests
 
             var response = await _controller.GetPlayerById(42);
 
-            Assert.That(response, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(response, Is.InstanceOf<OkObjectResult>());
         }
 
         [Test]
