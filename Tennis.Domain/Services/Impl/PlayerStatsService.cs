@@ -19,6 +19,11 @@ namespace Tennis.Domain.Services.Impl
             if (players == null || !players.Any())
                 return new PlayerStatsDto();
 
+            //filtrer pour avoir que les joueurs de taille et poids positifs
+            var validPlayers = players
+                .Where(p => p.Data.Height > 0 && p.Data.Weight > 0)
+                .ToList();
+
             var countryRatios = players
                 .GroupBy(p => p.Country.Code)
                 .Select(g => new
@@ -29,13 +34,13 @@ namespace Tennis.Domain.Services.Impl
                 .OrderByDescending(x => x.Ratio)
                 .First();
 
-            var averageImc = players.Average(p =>
+            var averageImc = validPlayers.Average(p =>
             {
                 var weightKg = p.Data.Weight / 1000.0;  //  g → kg
                 var heightM = p.Data.Height / 100.0;    //  cm → m
                 return weightKg / Math.Pow(heightM, 2);
             });
-            double medianHeight = CalculateMedianHeight(players);
+            double medianHeight = CalculateMedianHeight(validPlayers);
 
             return new PlayerStatsDto
             {
