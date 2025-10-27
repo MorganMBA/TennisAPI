@@ -45,7 +45,7 @@ namespace Tennis.Domain.Services.Impl
             return new PlayerStatsDto
             {
                 BestCountry = countryRatios.Country,
-                AverageBMI = Math.Round(averageImc, 2),
+                AverageImc = Math.Round(averageImc, 2),
                 MedianHeight = Math.Round(medianHeight, 2)
             };
         }
