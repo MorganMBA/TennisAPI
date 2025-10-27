@@ -3,7 +3,7 @@
     public class PlayerStatsDto
     {
         public string? BestCountry { get; set; }
-        public double AverageBMI { get; set; }
+        public double AverageImc { get; set; }
         public double MedianHeight { get; set; }
     }
 }
