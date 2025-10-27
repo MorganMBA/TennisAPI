@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
+using Tennis.Core.Entities.Converter;
 
 namespace Tennis.Core.Entities
 {
@@ -31,6 +32,8 @@ namespace Tennis.Core.Entities
         [DynamoDBProperty] public int Weight { get; set; }
         [DynamoDBProperty] public int Height { get; set; }
         [DynamoDBProperty] public int Age { get; set; }
-        [DynamoDBProperty] public List<int> Last { get; set; } = new();
+
+        [DynamoDBProperty(Converter = typeof(IntListConverter))]
+        public List<int> Last { get; set; } = new();
     }
 }
