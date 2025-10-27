@@ -9,14 +9,16 @@ namespace Tennis.Tests
     [TestFixture]
     public class PlayersControllerTests
     {
-        private Mock<IPlayerService> _mockService;
+        private Mock<IPlayerService> _mockPlayerService;
+        private Mock<IPlayerStatsService> _mockPlayerStatsService;
         private PlayersController _controller;
 
         [SetUp]
         public void Setup()
         {
-            _mockService = new Mock<IPlayerService>();
-            _controller = new PlayersController(_mockService.Object);
+            _mockPlayerService = new Mock<IPlayerService>();
+            _mockPlayerStatsService = new Mock<IPlayerStatsService>();
+            _controller = new PlayersController(_mockPlayerService.Object, _mockPlayerStatsService.Object);
         }
 
         [Test]
@@ -26,7 +28,7 @@ namespace Tennis.Tests
             {
                 new PlayerDto { Id = 1, Firstname = "Roger", Lastname = "Federer" }
             }.AsEnumerable();
-            _mockService.Setup(s => s.GetAllAsync()).ReturnsAsync(players);
+            _mockPlayerService.Setup(s => s.GetAllAsync()).ReturnsAsync(players);
 
             var response = await _controller.GetPlayers();
 
@@ -38,7 +40,7 @@ namespace Tennis.Tests
         [Test]
         public async Task GetPlayerById_ShouldReturnNotFound_WhenNoPlayer()
         {
-            _mockService.Setup(s => s.GetByIdAsync(42)).ReturnsAsync((PlayerDto?)null);
+            _mockPlayerService.Setup(s => s.GetByIdAsync(42)).ReturnsAsync((PlayerDto?)null);
 
             var response = await _controller.GetPlayerById(42);
 
@@ -49,7 +51,7 @@ namespace Tennis.Tests
         public async Task GetPlayerById_ShouldReturnOk_WhenPlayerExists()
         {
             var player = new PlayerDto { Id = 7, Firstname = "Djokovic", Lastname = "Novak" };
-            _mockService.Setup(s => s.GetByIdAsync(7)).ReturnsAsync(player);
+            _mockPlayerService.Setup(s => s.GetByIdAsync(7)).ReturnsAsync(player);
 
             var response = await _controller.GetPlayerById(7);
 
