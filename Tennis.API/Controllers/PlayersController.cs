@@ -9,9 +9,11 @@ namespace Tennis.API.Controllers
     public class PlayersController : Controller
     {
         private readonly IPlayerService _playerService;
-        public PlayersController(IPlayerService playerService)
+        private readonly IPlayerStatsService _playerStatsService;
+        public PlayersController(IPlayerService playerService, IPlayerStatsService playerStatsService)
         {
             _playerService = playerService;
+            _playerStatsService = playerStatsService;
         }
 
         [HttpGet]
@@ -40,6 +42,17 @@ namespace Tennis.API.Controllers
         {
             await _playerService.AddAsync(player);
             return CreatedAtAction(nameof(GetPlayerById), new { id = player.Id }, player);
+        }
+
+        [HttpGet("stats")]
+        public async Task<IActionResult> GetStatistics()
+        {
+            var stats = await _playerStatsService.GetStatisticsAsync();
+
+            if (stats == null)
+                return NoContent();
+
+            return Ok(stats);
         }
     }
 }
