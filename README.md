@@ -7,7 +7,7 @@ API REST développée en .NET 8 qui expose les statistiques des joueurs de tenni
 L’API est actuellement déployée sur AWS EC2 et accessible à l’adresse suivante :
 
 👉 Swagger UI :
-🔗 http://ec2-63-178-193-58.eu-central-1.compute.amazonaws.com/swagger/index.html
+🔗 http://ec2-3-79-168-143.eu-central-1.compute.amazonaws.com/swagger/index.html
 
 
 Architecture du projet
