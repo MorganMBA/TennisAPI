@@ -1,4 +1,7 @@
 using Amazon.DynamoDBv2;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Tennis.Core.Repositories;
 using Tennis.Domain.Services.Impl;
 using Tennis.Domain.Services.Interfaces;
@@ -16,6 +19,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHealthChecks()
+    .AddCheck("self", () => HealthCheckResult.Healthy("API is running"));
+
 builder.Services.AddSingleton<Amazon.DynamoDBv2.DataModel.IDynamoDBContext, Amazon.DynamoDBv2.DataModel.DynamoDBContext>();
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
@@ -32,5 +38,10 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.Run();
