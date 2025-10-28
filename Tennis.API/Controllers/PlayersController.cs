@@ -18,7 +18,18 @@ namespace Tennis.API.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Récupère la liste de tous les joueurs.
+        /// </summary>
+        /// <remarks>
+        /// Renvoie un code **204** si aucun joueur n'est trouvé.
+        /// </remarks>
+        /// <returns>Une liste de joueurs.</returns>
+        /// <response code="200">Liste des joueurs récupérée avec succès.</response>
+        /// <response code="204">Aucun joueur trouvé.</response>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<PlayerDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetPlayers()
         {
             var players = await _playerService.GetAllAsync();
@@ -29,7 +40,16 @@ namespace Tennis.API.Controllers
             return Ok(players);
         }
 
+        /// <summary>
+        /// Récupère les informations d’un joueur spécifique.
+        /// </summary>
+        /// <param name="id">Identifiant du joueur.</param>
+        /// <returns>Un joueur correspondant à l’identifiant spécifié.</returns>
+        /// <response code="200">Joueur trouvé et retourné avec succès.</response>
+        /// <response code="404">Aucun joueur trouvé avec cet identifiant.</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(PlayerDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetPlayerById(int id)
         {
             try
@@ -44,7 +64,16 @@ namespace Tennis.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Ajoute un nouveau joueur dans la base.
+        /// </summary>
+        /// <param name="player">Objet contenant les informations du joueur à ajouter.</param>
+        /// <returns>Le joueur ajouté.</returns>
+        /// <response code="201">Joueur créé avec succès.</response>
+        /// <response code="400">Requête invalide (données manquantes ou invalides).</response>
         [HttpPost]
+        [ProducesResponseType(typeof(PlayerDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddPlayer([FromBody] PlayerDto player)
         {
             if (!ModelState.IsValid)
@@ -64,7 +93,21 @@ namespace Tennis.API.Controllers
             
         }
 
+        /// <summary>
+        /// Calcule et retourne les statistiques globales des joueurs.
+        /// </summary>
+        /// <remarks>
+        /// Les statistiques incluent :
+        /// - Le pays ayant le meilleur ratio de victoires  
+        /// - L’IMC moyen des joueurs  
+        /// - La médiane de la taille des joueurs  
+        /// </remarks>
+        /// <returns>Un objet contenant les statistiques globales.</returns>
+        /// <response code="200">Statistiques calculées avec succès.</response>
+        /// <response code="204">Aucune donnée trouvée pour calculer les statistiques.</response>
         [HttpGet("stats")]
+        [ProducesResponseType(typeof(PlayerStatsDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetStatistics()
         {
             var stats = await _playerStatsService.GetStatisticsAsync();
