@@ -112,9 +112,6 @@ namespace Tennis.API.Controllers
         {
             var stats = await _playerStatsService.GetStatisticsAsync();
 
-            if (stats == null)
-                return NoContent();
-
             return Ok(stats);
         }
     }

@@ -24,6 +24,7 @@ namespace Tennis.Domain.Services.Impl
                 .Where(p => p.Data.Height > 0 && p.Data.Weight > 0)
                 .ToList();
 
+            // à refacto
             var countryRatios = players
                 .GroupBy(p => p.Country.Code)
                 .Select(g => new
@@ -34,12 +35,7 @@ namespace Tennis.Domain.Services.Impl
                 .OrderByDescending(x => x.Ratio)
                 .First();
 
-            var averageImc = validPlayers.Average(p =>
-            {
-                var weightKg = p.Data.Weight / 1000.0;  //  g → kg
-                var heightM = p.Data.Height / 100.0;    //  cm → m
-                return weightKg / Math.Pow(heightM, 2);
-            });
+            var averageImc = validPlayers.Average(GetImcByPlayer());
             double medianHeight = CalculateMedianHeight(validPlayers);
 
             return new PlayerStatsDto
@@ -47,6 +43,16 @@ namespace Tennis.Domain.Services.Impl
                 BestCountry = countryRatios.Country,
                 AverageImc = Math.Round(averageImc, 2),
                 MedianHeight = Math.Round(medianHeight, 2)
+            };
+        }
+
+        private static Func<Core.Entities.Player, double> GetImcByPlayer()
+        {
+            return p =>
+            {
+                var weightKg = p.Data.Weight / 1000.0;  //  g → kg
+                var heightM = p.Data.Height / 100.0;    //  cm → m
+                return weightKg / Math.Pow(heightM, 2);
             };
         }
 
